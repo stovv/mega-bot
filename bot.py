@@ -1,6 +1,5 @@
 import argparse
-from bot_core import KeyClassificator
-from email_data_json import Base_
+from bot_core import KeyParser, Base_, DocumentReader, TextClassifier
 
 test_str = u'Подключите услугу «Командировка» на номере\n'\
     u'1271132111 кодовое слово: Слон и Моська'
@@ -10,13 +9,17 @@ test_str2 = u'Подключите услугу «Роуминг Гудбай»\
 
 if __name__ == "__main__":
     # get_messages
-    messages = Base_.get_messages()
+    parsed = {}
+    messages = Base_.select_json('messages')
+    users = Base_.select_json("users")
     for message in messages:
-        print(message)
-        # analize or skip
-        # add key in base
-        # add key to frontend
-    classificator = KeyClassificator()
-    print(classificator.find_all(test_str))
-    print(classificator.find_all(test_str2))
+        sender = message['sender']
+        print(message["body"])
+        # get lk_number from text or attach
+        # check access email and sender_email
+        # parse
+        # add parse data to parsed
+        # add status to parsed
+    Base_.clean_base("messages")
+    # push parsed base
 
