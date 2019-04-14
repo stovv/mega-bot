@@ -1,25 +1,31 @@
 import argparse
-from bot_core import KeyParser, Base_, DocumentReader, TextClassifier
+from bot_core import Speak, Base_
+import smtplib
+import re
+import os
 
-test_str = u'Подключите услугу «Командировка» на номере\n'\
-    u'1271132111 кодовое слово: Слон и Моська'
-test_str2 = u'Подключите услугу «Роуминг Гудбай»\n'\
-    u'1271132111\n\n'\
-    u'Слон'
+top_dir = '/home/a0231165/domains/cometbot.ru/pyscript'
+os.chdir(top_dir)
 
 if __name__ == "__main__":
-    # get_messages
-    parsed = {}
-    messages = Base_.select_json('messages')
-    users = Base_.select_json("users")
-    for message in messages:
-        sender = message['sender']
-        print(message["body"])
-        # get lk_number from text or attach
-        # check access email and sender_email
-        # parse
-        # add parse data to parsed
-        # add status to parsed
-    Base_.clean_base("messages")
-    # push parsed base
+    base = Base_()
+    messages = base.select_json('messages')
+    base = Base_()
+    lines = base.select_json('lastpipelines')
+    server = 'smtp.cometbot.ru'
+    user = 'megabot@cometbot.ru'
+    password = 'megabotiscool'
+    session = smtplib.SMTP(server)
+        # if your SMTP server doesn't need authentications,
+        # you don't need the following line:
+    session.login(user, password)
 
+    for message in messages:
+        mail_mask = re.compile(r"[a-zA-Z._\-0-9]+@[a-zA-Z._\-0-9]+")
+        email = mail_mask.findall(message["sender"])[0]
+        speaking = Speak(email, session)  # create speak thread
+        speaking.send_response(message)
+
+    Base_.clean_table_messages()
+    print('\n\n\n')
+    # base.clean_base("messages")
