@@ -7,6 +7,8 @@ import os
 top_dir = '/home/a0231165/domains/cometbot.ru/pyscript'
 os.chdir(top_dir)
 
+#test commit
+
 if __name__ == "__main__":
     base = Base_()
     messages = base.select_json('messages')
